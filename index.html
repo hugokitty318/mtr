@@ -9,49 +9,116 @@
 <link rel="preconnect" href="https://rt.data.gov.hk">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"港鐵 MTR 即時到站時間 - 車站提示","description":"提供香港港鐵(MTR)各路線即時到站時間查詢，支援全線路及車站，界面簡潔，資訊準確。","url":"https://your-website-url.com","applicationCategory":"Utilities","operatingSystem":"Any"}</script>
 <style>
-:root{--primary-color:#007AFF;--background-color:#F2F2F7;--card-background-color:#FFFFFF;--text-color:#000000;--subtle-text-color:#6D6D80;--border-color:#C6C6C8;--shadow:0 4px 12px rgba(0,0,0,0.08);--font-family-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--safe-area-inset-top:env(safe-area-inset-top);--safe-area-inset-bottom:env(safe-area-inset-bottom);--safe-area-inset-right:env(safe-area-inset-right);}
+:root{--primary-color:#007AFF;--background-color:#F2F2F7;--card-background-color:#FFFFFF;--text-color:#000000;--subtle-text-color:#6D6D80;--border-color:#C6C6C8;--shadow:0 4px 12px rgba(0,0,0,0.08);--font-family-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--safe-area-inset-top:env(safe-area-inset-top);--safe-area-inset-bottom:env(safe-area-inset-bottom);--safe-area-inset-right:env(safe-area-inset-right);--font-size-base:16px;}
 [data-theme="dark"]{--background-color:#000000;--card-background-color:#1C1C1E;--text-color:#FFFFFF;--subtle-text-color:#8E8E93;--border-color:#38383A;--shadow:0 4px 12px rgba(0,0,0,0.5);}
-body{font-family:var(--font-family-sans);background-color:var(--background-color);color:var(--text-color);margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-size-adjust:100%;transition:background-color .3s ease,color .3s ease;}
-.container{max-width:600px;margin:0 auto;padding:.75rem clamp(1rem,4vw,1.5rem);padding-top:calc(.75rem + var(--safe-area-inset-top));}
-.navbar{background-color:var(--card-background-color);border-bottom:1px solid var(--border-color);padding:.75rem 1rem;padding-top:calc(.75rem + var(--safe-area-inset-top));padding-right:calc(1rem + var(--safe-area-inset-right));display:flex;justify-content:center;align-items:center;position:fixed;top:0;left:0;width:100%;z-index:1000;box-shadow:var(--shadow);transition:background-color .3s ease,border-color .3s ease,box-shadow .3s ease;}
-.navbar-content{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:600px;}
-.navbar h1{font-size:1.1rem;font-weight:600;margin:0;}
+body{font-family:var(--font-family-sans);font-size:var(--font-size-base);background-color:var(--background-color);color:var(--text-color);margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-size-adjust:100%;transition:background-color .3s ease,color .3s ease;touch-action:manipulation;}
+.container{max-width:600px;margin:0 auto;padding:.5rem clamp(0.8rem,3vw,1rem);padding-top:calc(.5rem + var(--safe-area-inset-top));}
+.navbar{background-color:var(--card-background-color);border-bottom:1px solid var(--border-color);padding:.5rem clamp(0.8rem,2vw,1rem);padding-top:calc(.5rem + var(--safe-area-inset-top));display:flex;justify-content:center;align-items:center;position:fixed;top:0;left:0;width:100%;z-index:1000;box-shadow:var(--shadow);transition:background-color .3s ease,border-color .3s ease,box-shadow .3s ease;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.navbar-content{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:600px;position:relative;}
+.navbar h1{font-size:1.1rem;font-weight:600;margin:0;text-align:center;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 10px;}
 main{transition:padding-top .3s ease;}
-section{margin-bottom:1.5rem;}
-h2{font-size:1.1rem;font-weight:600;margin-top:0;margin-bottom:1rem;}
-.theme-toggle{background:none;border:none;cursor:pointer;padding:8px;margin-right:calc(8px + var(--safe-area-inset-right));border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-color);transition:background-color .2s ease;}
+section{margin-bottom:1rem;}
+h2{font-size:1rem;font-weight:600;margin-top:0;margin-bottom:0.8rem;}
+.nav-controls{display:flex;gap:8px;position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:10;}
+.theme-toggle{background:none;border:none;cursor:pointer;padding:8px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-color);transition:background-color .2s ease;-webkit-tap-highlight-color:transparent;min-width:44px;min-height:44px;}
 .theme-toggle:hover{background-color:var(--border-color);}
+.theme-toggle:active{transform:scale(0.95);}
 .theme-toggle svg{width:24px;height:24px;}
-.button-group{display:flex;flex-wrap:wrap;gap:clamp(8px,2vw,12px);justify-content:center;}
-.btn-station{flex:1 1 calc(33.333% - 12px);min-width:90px;min-height:44px;padding:10px 8px;border:1px solid var(--border-color);background-color:var(--card-background-color);border-radius:12px;cursor:pointer;font-size:.9rem;font-weight:500;color:var(--text-color);transition:all .2s ease-in-out,transform .1s ease-out;text-align:center;-webkit-tap-highlight-color:transparent;box-sizing:border-box;display:flex;align-items:center;justify-content:center;}
-@media (min-width:480px){.btn-station{flex:1 1 calc(25% - 12px);font-size:1rem;padding:12px 16px;}}
-@media (min-width:768px){.btn-station{flex:1 1 calc(20% - 12px);}}
+.button-group{display:flex;flex-wrap:wrap;gap:clamp(6px,1.5vw,10px);justify-content:center;}
+.btn-station{flex:1 1 calc(33.333% - 10px);min-width:85px;min-height:44px;padding:10px 8px;border:1px solid var(--border-color);background-color:var(--card-background-color);border-radius:12px;cursor:pointer;font-size:0.95rem;font-weight:500;color:var(--text-color);transition:all .2s ease-in-out,transform .1s ease-out;text-align:center;-webkit-tap-highlight-color:transparent;box-sizing:border-box;display:flex;align-items:center;justify-content:center;position:relative;white-space:nowrap;-webkit-user-select:none;user-select:none;}
+@media (min-width:480px){.btn-station{flex:1 1 calc(25% - 10px);font-size:1rem;padding:12px 12px;}}
+@media (min-width:768px){.btn-station{flex:1 1 calc(20% - 10px);}}
 .btn-station:hover{background-color:var(--border-color);transform:translateY(-2px);box-shadow:var(--shadow);}
 .btn-station:active{transform:translateY(0);box-shadow:0 2px 4px rgba(0,0,0,0.1);}
 .btn-station.active{background-color:var(--primary-color);color:white;border-color:var(--primary-color);}
 .btn-station:focus{outline:2px solid var(--primary-color);outline-offset:2px;}
-.time-table-container{background-color:var(--card-background-color);border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-bottom:calc(1.5rem + var(--safe-area-inset-bottom));transition:background-color .3s ease,box-shadow .3s ease;}
-.time-table{width:100%;border-collapse:collapse;margin-top:1rem;}
-.time-table caption{font-size:1.1rem;font-weight:600;padding:.5rem 0;caption-side:top;text-align:left;}
-.time-table th,.time-table td{padding:12px 8px;text-align:left;border-bottom:1px solid var(--border-color);}
-.time-table thead th{font-weight:600;color:var(--subtle-text-color);background-color:var(--background-color);}
+.line-color-indicator{width:4px;height:100%;position:absolute;left:0;top:0;border-radius:12px 0 0 12px;}
+.time-table-container{background-color:var(--card-background-color);border-radius:12px;padding:0.5rem;box-shadow:var(--shadow);margin-bottom:calc(0.5rem + var(--safe-area-inset-bottom));transition:background-color .3s ease,box-shadow .3s ease;}
+.time-table{width:100%;border-collapse:collapse;margin-top:0.3rem;}
+.time-table caption{font-size:1.1rem;font-weight:600;padding:0.3rem 0;caption-side:top;text-align:left;}
+.time-table th,.time-table td{padding:6px 4px;text-align:left;border-bottom:1px solid var(--border-color);font-size:1.1rem;line-height:1.3;}
+.time-table thead th{font-weight:600;color:var(--subtle-text-color);background-color:var(--background-color);font-size:1rem;}
 .time-table tbody tr:last-child td{border-bottom:none;}
-.time-table td:first-child{white-space:nowrap;}
-.loading-indicator,.error-message{text-align:center;padding:20px;color:var(--subtle-text-color);}
+.time-table td:first-child{white-space:nowrap;font-weight:500;}
+.loading-indicator,.error-message{text-align:center;padding:15px;color:var(--subtle-text-color);font-size:1rem;}
 .error-message{color:#D70015;}
 .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
-.offline-indicator{position:fixed;bottom:0;left:0;width:100%;background-color:#FF9500;color:white;text-align:center;padding:8px;transform:translateY(100%);transition:transform .3s ease;z-index:1001;}
+.offline-indicator{position:fixed;bottom:0;left:0;width:100%;background-color:#FF9500;color:white;text-align:center;padding:10px;transform:translateY(100%);transition:transform .3s ease;z-index:1001;font-size:1rem;}
 .offline-indicator.show{transform:translateY(0);}
+.search-container{margin-bottom:0.8rem;position:relative;}
+.search-input{width:100%;padding:12px 40px 12px 16px;border:1px solid var(--border-color);border-radius:12px;background-color:var(--card-background-color);color:var(--text-color);font-size:1rem;box-sizing:border-box;-webkit-appearance:none;}
+.search-input:focus{outline:2px solid var(--primary-color);outline-offset:2px;}
+.search-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--subtle-text-color);cursor:pointer;padding:8px;-webkit-tap-highlight-color:transparent;}
+.search-clear:hover{color:var(--text-color);}
+.autocomplete-dropdown{position:absolute;top:100%;left:0;right:0;background-color:var(--card-background-color);border:1px solid var(--border-color);border-radius:12px;margin-top:4px;max-height:200px;overflow-y:auto;z-index:100;box-shadow:var(--shadow);}
+.autocomplete-item{padding:12px 16px;cursor:pointer;transition:background-color .2s ease;display:flex;align-items:center;gap:8px;font-size:1rem;-webkit-tap-highlight-color:transparent;}
+.autocomplete-item:hover{background-color:var(--border-color);}
+.autocomplete-item.selected{background-color:var(--primary-color);color:white;}
+.line-indicator{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+
+/* 小屏幕優化 */
+@media (max-width: 380px) {
+  .navbar h1 {
+    font-size: 1rem;
+    padding: 0 5px;
+  }
+  .theme-toggle {
+    padding: 6px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .theme-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+  .btn-station {
+    font-size: 0.85rem;
+    padding: 8px 6px;
+    min-height: 40px;
+  }
+  .time-table th, .time-table td {
+    font-size: 1rem;
+    padding: 5px 3px;
+  }
+}
+
+/* 超小屏幕優化 */
+@media (max-width: 320px) {
+  .navbar h1 {
+    font-size: 0.95rem;
+    padding: 0 3px;
+  }
+  .theme-toggle {
+    padding: 5px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .theme-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+  .btn-station {
+    font-size: 0.8rem;
+    padding: 6px 4px;
+    min-height: 36px;
+  }
+  .time-table th, .time-table td {
+    font-size: 0.9rem;
+    padding: 4px 2px;
+  }
+}
 </style>
 </head>
 <body>
 <header class="navbar" role="banner">
 <div class="navbar-content">
 <h1>車站提示</h1>
+<div class="nav-controls">
 <button id="theme-toggle" class="theme-toggle" aria-label="切換主題">
 <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
 <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
 </button>
+</div>
 </div>
 </header>
 <main class="container" role="main">
@@ -60,6 +127,11 @@ h2{font-size:1.1rem;font-weight:600;margin-top:0;margin-bottom:1rem;}
 <nav id="line-buttons" class="button-group" role="group" aria-labelledby="line-selection-title"></nav>
 </section>
 <section id="station-selection" aria-labelledby="station-selection-title" style="display:none;">
+<div class="search-container">
+<input type="text" id="station-search" class="search-input" placeholder="搜尋所有車站..." autocomplete="off">
+<button id="search-clear" class="search-clear" aria-label="清除搜索" style="display:none;">✕</button>
+<div id="autocomplete-dropdown" class="autocomplete-dropdown" style="display:none;"></div>
+</div>
 <h2 id="station-selection-title">揀你而家喺邊個站：</h2>
 <nav id="station-buttons-container" class="button-group" role="group" aria-labelledby="station-selection-title"></nav>
 </section>
@@ -80,27 +152,484 @@ h2{font-size:1.1rem;font-weight:600;margin-top:0;margin-bottom:1rem;}
 </section>
 </main>
 <div id="offline-indicator" class="offline-indicator" role="status" aria-live="polite">網路連線已斷開，顯示的是離線資料</div>
-<script defer>
+<script>
+// 港鐵線路顏色
+const lineColors = {
+  'TKL': '#7e4c93',  // 將軍澳線
+  'ISL': '#007d36',  // 港島線
+  'KTL': '#00a04a',  // 觀塘線
+  'TWL': '#e31f24',  // 荃灣線
+  'TML': '#8d5025',  // 屯馬線
+  'EAL': '#5eb7e8',  // 東鐵線
+  'TCL': '#f7943d',  // 東涌線
+  'AEL': '#00888e',  // 機場快線
+  'SIL': '#bcbd22'   // 南港島線
+};
+
+// 線路數據
 const lines={'TKL':'將軍澳線','ISL':'港島線','KTL':'觀塘線','TWL':'荃灣線','TML':'屯馬線','EAL':'東鐵線','TCL':'東涌線','AEL':'機場快線','SIL':'南港島線'};
+
+// 車站數據
 const stations={'TKL':{id:'TKL',name:'將軍澳線',stations:[{id:'NOP',name:'北角',up:"往寶琳/康城方向"},{id:'QUB',name:'鰂魚涌',up:"往寶琳/康城方向",down:"往北角方向"},{id:'YAT',name:'油塘',up:"往寶琳/康城方向",down:"往北角方向"},{id:'TIK',name:'調景嶺',up:"往寶琳/康城方向",down:"往北角方向"},{id:'TKO',name:'將軍澳',up:"往寶琳/康城方向",down:"往北角/調景嶺方向"},{id:'HAH',name:'坑口',up:"往寶琳方向",down:"往北角方向"},{id:'POA',name:'寶琳',down:"往北角方向"},{id:'LHP',name:'康城',down:"往北角/調景嶺方向"}]},'ISL':{id:'ISL',name:'港島線',stations:[{id:'CHW',name:'柴灣',down:"往堅尼地城方向"},{id:'HFC',name:'杏花邨',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'SKW',name:'筲箕灣',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'SWH',name:'西灣河',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'TAK',name:'太古',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'QUB',name:'鰂魚涌',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'NOP',name:'北角',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'FOH',name:'炮台山',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'TIH',name:'天后',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'CAB',name:'銅鑼灣',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'WAC',name:'灣仔',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'ADM',name:'金鐘',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'CEN',name:'中環',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'SHW',name:'上環',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'SYP',name:'西營盤',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'HKU',name:'香港大學',up:"往柴灣方向",down:"往堅尼地城方向"},{id:'KET',name:'堅尼地城',up:"往柴灣方向"}]},'KTL':{id:'KTL',name:'觀塘線',stations:[{id:'TIK',name:'調景嶺',down:"往黃埔方向"},{id:'YAT',name:'油塘',up:"往調景嶺方向",down:"往黃埔方向"},{id:'LAT',name:'藍田',up:"往調景嶺方向",down:"往黃埔方向"},{id:'KWT',name:'觀塘',up:"往調景嶺方向",down:"往黃埔方向"},{id:'NTK',name:'牛頭角',up:"往調景嶺方向",down:"往黃埔方向"},{id:'KOB',name:'九龍灣',up:"往調景嶺方向",down:"往黃埔方向"},{id:'CHH',name:'彩虹',up:"往調景嶺方向",down:"往黃埔方向"},{id:'DIH',name:'鑽石山',up:"往調景嶺方向",down:"往黃埔方向"},{id:'WTS',name:'黃大仙',up:"往調景嶺方向",down:"往黃埔方向"},{id:'LOF',name:'樂富',up:"往調景嶺方向",down:"往黃埔方向"},{id:'KOT',name:'九龍塘',up:"往調景嶺方向",down:"往黃埔方向"},{id:'SKM',name:'石硤尾',up:"往調景嶺方向",down:"往黃埔方向"},{id:'PRE',name:'太子',up:"往調景嶺方向",down:"往黃埔方向"},{id:'MOK',name:'旺角',up:"往調景嶺方向",down:"往黃埔方向"},{id:'YMT',name:'油麻地',up:"往調景嶺方向",down:"往黃埔方向"},{id:'HOM',name:'何文田',up:"往調景嶺方向",down:"往黃埔方向"},{id:'WHA',name:'黃埔',up:"往調景嶺方向"}]},'TWL':{id:'TWL',name:'荃灣線',stations:[{id:'TSW',name:'荃灣',down:"往中環方向"},{id:'TWH',name:'大窩口',up:"往荃灣方向",down:"往中環方向"},{id:'KWH',name:'葵興',up:"往荃灣方向",down:"往中環方向"},{id:'KWF',name:'葵芳',up:"往荃灣方向",down:"往中環方向"},{id:'LAK',name:'荔景',up:"往荃灣方向",down:"往中環方向"},{id:'MEF',name:'美孚',up:"往荃灣方向",down:"往中環方向"},{id:'LCK',name:'荔枝角',up:"往荃灣方向",down:"往中環方向"},{id:'CSW',name:'長沙灣',up:"往荃灣方向",down:"往中環方向"},{id:'SSP',name:'深水埗',up:"往荃灣方向",down:"往中環方向"},{id:'PRE',name:'太子',up:"往荃灣方向",down:"往中環方向"},{id:'MOK',name:'旺角',up:"往荃灣方向",down:"往中環方向"},{id:'YMT',name:'油麻地',up:"往荃灣方向",down:"往中環方向"},{id:'JOR',name:'佐敦',up:"往荃灣方向",down:"往中環方向"},{id:'TST',name:'尖沙咀',up:"往荃灣方向",down:"往中環方向"},{id:'ADM',name:'金鐘',up:"往荃灣方向",down:"往中環方向"},{id:'CEN',name:'中環',up:"往荃灣方向"}]},'TML':{id:'TML',name:'屯馬線',stations:[{id:'WKS',name:'烏溪沙',up:"往屯門方向"},{id:'MOS',name:'馬鞍山',up:"往屯門方向",down:"往烏溪沙方向"},{id:'HEO',name:'恆安',up:"往屯門方向",down:"往烏溪沙方向"},{id:'TSH',name:'大水坑',up:"往屯門方向",down:"往烏溪沙方向"},{id:'SHM',name:'石門',up:"往屯門方向",down:"往烏溪沙方向"},{id:'CIO',name:'第一城',up:"往屯門方向",down:"往烏溪沙方向"},{id:'STW',name:'沙田圍',up:"往屯門方向",down:"往烏溪沙方向"},{id:'CKT',name:'車公廟',up:"往屯門方向",down:"往烏溪沙方向"},{id:'TAW',name:'大圍',up:"往屯門方向",down:"往烏溪沙方向"},{id:'HIK',name:'顯徑',up:"往屯門方向",down:"往烏溪沙方向"},{id:'DIH',name:'鑽石山',up:"往屯門方向",down:"往烏溪沙方向"},{id:'KAT',name:'啟德',up:"往屯門方向",down:"往烏溪沙方向"},{id:'SUW',name:'宋皇臺',up:"往屯門方向",down:"往烏溪沙方向"},{id:'TKW',name:'土瓜灣',up:"往屯門方向",down:"往烏溪沙方向"},{id:'HOM',name:'何文田',up:"往屯門方向",down:"往烏溪沙方向"},{id:'HUH',name:'紅磡',up:"往屯門方向",down:"往烏溪沙方向"},{id:'ETS',name:'尖東',up:"往屯門方向",down:"往烏溪沙方向"},{id:'AUS',name:'柯士甸',up:"往屯門方向",down:"往烏溪沙方向"},{id:'NAC',name:'南昌',up:"往屯門方向",down:"往烏溪沙方向"},{id:'MEF',name:'美孚',up:"往屯門方向",down:"往烏溪沙方向"},{id:'TWW',name:'荃灣西',up:"往屯門方向",down:"往烏溪沙方向"},{id:'KSR',name:'錦上路',up:"往屯門方向",down:"往烏溪沙方向"},{id:'YUL',name:'元朗',up:"往屯門方向",down:"往烏溪沙方向"},{id:'LOP',name:'朗屏',up:"往屯門方向",down:"往烏溪沙方向"},{id:'TIS',name:'天水圍',up:"往屯門方向",down:"往烏溪沙方向"},{id:'SIH',name:'兆康',up:"往屯門方向",down:"往烏溪沙方向"},{id:'TUM',name:'屯門',down:"往烏溪沙方向"}]},'EAL':{id:'EAL',name:'東鐵線',stations:[{id:'LMC',name:'落馬洲',down:"往金鐘方向"},{id:'LOW',name:'羅湖',down:"往金鐘方向"},{id:'SHS',name:'上水',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'FAN',name:'粉嶺',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'TWO',name:'太和',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'TAP',name:'大埔墟',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'UNI',name:'大學',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'RAC',name:'馬場',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'FOT',name:'火炭',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'SHT',name:'沙田',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'TAW',name:'大圍',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'KOT',name:'九龍塘',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'MKK',name:'旺角東',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'HUH',name:'紅磡',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'EXC',name:'會展',up:"往上水/羅湖方向",down:"往金鐘方向"},{id:'ADM',name:'金鐘',up:"往上水/羅湖方向"}]},'TCL':{id:'TCL',name:'東涌線',stations:[{id:'TUC',name:'東涌',down:"往香港方向"},{id:'SUN',name:'欣澳',up:"往東涌方向",down:"往香港方向"},{id:'TSY',name:'青衣',up:"往東涌方向",down:"往香港方向"},{id:'LAK',name:'荔景',up:"往東涌方向",down:"往香港方向"},{id:'NAC',name:'南昌',up:"往東涌方向",down:"往香港方向"},{id:'OLY',name:'奧運',up:"往東涌方向",down:"往香港方向"},{id:'KOW',name:'九龍',up:"往東涌方向",down:"往香港方向"},{id:'HOK',name:'香港',up:"往東涌方向"}]},'AEL':{id:'AEL',name:'機場快線',stations:[{id:'AWE',name:'博覽館',down:"往香港方向"},{id:'AIR',name:'機場',up:"往機場/博覽館方向",down:"往香港方向"},{id:'TSY',name:'青衣',up:"往機場/博覽館方向",down:"往香港方向"},{id:'KOW',name:'九龍',up:"往機場/博覽館方向",down:"往香港方向"},{id:'HOK',name:'香港',up:"往機場/博覽館方向"}]},'SIL':{id:'SIL',name:'南港島線',stations:[{id:'SOH',name:'海怡半島',down:"往金鐘方向"},{id:'LET',name:'利東',up:"往海怡半島方向",down:"往金鐘方向"},{id:'WCH',name:'黃竹坑',up:"往海怡半島方向",down:"往金鐘方向"},{id:'OCP',name:'海洋公園',up:"往海怡半島方向",down:"往金鐘方向"},{id:'ADM',name:'金鐘',up:"往海怡半島方向"}]}};
+
+// 車站名稱映射
 const stationNames={"NOP":"北角","QUB":"鰂魚涌","YAT":"油塘","TIK":"調景嶺","TKO":"將軍澳","HAH":"坑口","POA":"寶琳","LHP":"康城","CHW":"柴灣","HFC":"杏花邨","SKW":"筲箕灣","SWH":"西灣河","TAK":"太古","FOH":"炮台山","TIH":"天后","CAB":"銅鑼灣","WAC":"灣仔","ADM":"金鐘","CEN":"中環","SHW":"上環","SYP":"西營盤","HKU":"香港大學","KET":"堅尼地城","LAT":"藍田","KWT":"觀塘","NTK":"牛頭角","KOB":"九龍灣","CHH":"彩虹","DIH":"鑽石山","WTS":"黃大仙","LOF":"樂富","KOT":"九龍塘","SKM":"石硤尾","PRE":"太子","MOK":"旺角","YMT":"油麻地","HOM":"何文田","WHA":"黃埔","TSW":"荃灣","TWH":"大窩口","KWH":"葵興","KWF":"葵芳","LAK":"荔景","MEF":"美孚","LCK":"荔枝角","CSW":"長沙灣","SSP":"深水埗","JOR":"佐敦","TST":"尖沙咀","WKS":"烏溪沙","MOS":"馬鞍山","HEO":"恆安","TSH":"大水坑","SHM":"石門","CIO":"第一城","STW":"沙田圍","CKT":"車公廟","TAW":"大圍","HIK":"顯徑","KAT":"啟德","SUW":"宋皇臺","TKW":"土瓜灣","HUH":"紅磡","ETS":"尖東","AUS":"柯士甸","NAC":"南昌","TWW":"荃灣西","KSR":"錦上路","YUL":"元朗","LOP":"朗屏","TIS":"天水圍","SIH":"兆康","TUM":"屯門","LMC":"落馬洲","LOW":"羅湖","SHS":"上水","FAN":"粉嶺","TWO":"太和","TAP":"大埔墟","UNI":"大學","RAC":"馬場","FOT":"火炭","SHT":"沙田","MKK":"旺角東","EXC":"會展","TUC":"東涌","SUN":"欣澳","TSY":"青衣","OLY":"奧運","KOW":"九龍","HOK":"香港","AWE":"博覽館","AIR":"機場","SOH":"海怡半島","LET":"利東","WCH":"黃竹坑","OCP":"海洋公園"};
-let currentLineID=null,currentStationID=null,scheduleCache=new Map,refreshInterval,isOnline=navigator.onLine;
-const lineButtonsContainer=document.getElementById('line-buttons'),stationButtonsContainer=document.getElementById('station-buttons-container'),stationSelectionSection=document.getElementById('station-selection'),scheduleDisplaySection=document.getElementById('schedule-display'),upTimeTableBody=document.querySelector('#up-time-table tbody'),downTimeTableBody=document.querySelector('#down-time-table tbody'),upCaption=document.getElementById('up-caption'),downCaption=document.getElementById('down-caption'),upTimeTable=document.getElementById('up-time-table'),downTimeTable=document.getElementById('down-time-table'),offlineIndicator=document.getElementById('offline-indicator'),themeToggle=document.getElementById('theme-toggle'),sunIcon=document.querySelector('.sun-icon'),moonIcon=document.querySelector('.moon-icon'),mainElement=document.querySelector('main'),navbarElement=document.querySelector('.navbar');
+
+// 全局變量
+let currentLineID=null,currentStationID=null,scheduleCache=new Map,refreshInterval,isOnline=navigator.onLine,autocompleteIndex=-1,lastUpdateTime=0;
+
+// DOM元素
+const lineButtonsContainer=document.getElementById('line-buttons'),stationButtonsContainer=document.getElementById('station-buttons-container'),stationSelectionSection=document.getElementById('station-selection'),scheduleDisplaySection=document.getElementById('schedule-display'),upTimeTableBody=document.querySelector('#up-time-table tbody'),downTimeTableBody=document.querySelector('#down-time-table tbody'),upCaption=document.getElementById('up-caption'),downCaption=document.getElementById('down-caption'),upTimeTable=document.getElementById('up-time-table'),downTimeTable=document.getElementById('down-time-table'),offlineIndicator=document.getElementById('offline-indicator'),themeToggle=document.getElementById('theme-toggle'),sunIcon=document.querySelector('.sun-icon'),moonIcon=document.querySelector('.moon-icon'),mainElement=document.querySelector('main'),navbarElement=document.querySelector('.navbar'),searchInput=document.getElementById('station-search'),searchClear=document.getElementById('search-clear'),autocompleteDropdown=document.getElementById('autocomplete-dropdown');
+
+// 搜索功能
+function initSearch() {
+  searchInput.addEventListener('input', debounce(handleSearch, 300));
+  searchInput.addEventListener('keydown', handleSearchKeydown);
+  searchClear.addEventListener('click', clearSearch);
+  
+  // 點擊外部關閉自動完成
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-container')) {
+      closeAutocomplete();
+    }
+  });
+}
+
+// 防抖函數
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// 處理搜索
+function handleSearch(e) {
+  const query = e.target.value.trim();
+  searchClear.style.display = query ? 'block' : 'none';
+  
+  if (!query) {
+    filterStations('');
+    closeAutocomplete();
+    return;
+  }
+  
+  filterStations(query);
+  showAutocomplete(query);
+}
+
+// 處理搜索鍵盤事件
+function handleSearchKeydown(e) {
+  const items = autocompleteDropdown.querySelectorAll('.autocomplete-item');
+  
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    autocompleteIndex = Math.min(autocompleteIndex + 1, items.length - 1);
+    updateAutocompleteSelection(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    autocompleteIndex = Math.max(autocompleteIndex - 1, -1);
+    updateAutocompleteSelection(items);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (autocompleteIndex >= 0 && items[autocompleteIndex]) {
+      items[autocompleteIndex].click();
+    }
+  } else if (e.key === 'Escape') {
+    clearSearch();
+  }
+}
+
+// 更新自動完成選擇
+function updateAutocompleteSelection(items) {
+  items.forEach((item, index) => {
+    if (index === autocompleteIndex) {
+      item.classList.add('selected');
+    } else {
+      item.classList.remove('selected');
+    }
+  });
+}
+
+// 顯示自動完成
+function showAutocomplete(query) {
+  const matches = [];
+  
+  // 搜索所有線路的車站
+  for (const lineId in stations) {
+    const lineData = stations[lineId];
+    lineData.stations.forEach(station => {
+      if (station.name.toLowerCase().includes(query.toLowerCase())) {
+        matches.push({
+          ...station,
+          lineId: lineId,
+          lineName: lineData.name
+        });
+      }
+    });
+  }
+  
+  if (matches.length === 0) {
+    closeAutocomplete();
+    return;
+  }
+  
+  autocompleteDropdown.innerHTML = '';
+  autocompleteIndex = -1;
+  
+  matches.slice(0, 5).forEach(match => {
+    const item = document.createElement('div');
+    item.className = 'autocomplete-item';
+    
+    // 添加線路顏色指示器
+    const lineIndicator = document.createElement('div');
+    lineIndicator.className = 'line-indicator';
+    lineIndicator.style.backgroundColor = lineColors[match.lineId];
+    
+    const stationName = document.createElement('span');
+    stationName.textContent = match.name;
+    
+    const lineName = document.createElement('span');
+    lineName.textContent = ` (${match.lineName})`;
+    lineName.style.color = 'var(--subtle-text-color)';
+    
+    item.appendChild(lineIndicator);
+    item.appendChild(stationName);
+    item.appendChild(lineName);
+    
+    item.addEventListener('click', () => {
+      searchInput.value = match.name;
+      clearSearch();
+      // 切換到對應線路並選擇車站
+      handleLineClick(match.lineId);
+      setTimeout(() => {
+        handleStationClick(match.id, match.up, match.down);
+      }, 100);
+    });
+    autocompleteDropdown.appendChild(item);
+  });
+  
+  autocompleteDropdown.style.display = 'block';
+}
+
+// 關閉自動完成
+function closeAutocomplete() {
+  autocompleteDropdown.style.display = 'none';
+  autocompleteIndex = -1;
+}
+
+// 清除搜索
+function clearSearch() {
+  searchInput.value = '';
+  searchClear.style.display = 'none';
+  filterStations('');
+  closeAutocomplete();
+}
+
+// 過濾車站
+function filterStations(query) {
+  const buttons = document.querySelectorAll('#station-buttons-container .btn-station');
+  buttons.forEach(button => {
+    const stationName = button.textContent.toLowerCase();
+    if (stationName.includes(query.toLowerCase())) {
+      button.style.display = 'flex';
+    } else {
+      button.style.display = 'none';
+    }
+  });
+}
+
+// 調整主內容區域的padding
 function adjustMainPadding(){mainElement.style.paddingTop=`${navbarElement.offsetHeight}px`}
-function initTheme(){const savedTheme=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',savedTheme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));updateThemeIcon()}
-function toggleTheme(){const currentTheme=document.documentElement.getAttribute('data-theme');const newTheme=currentTheme==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',newTheme);localStorage.setItem('theme',newTheme);updateThemeIcon()}
-function updateThemeIcon(){const currentTheme=document.documentElement.getAttribute('data-theme');if(sunIcon)sunIcon.style.display=currentTheme==='dark'?'none':'block';if(moonIcon)moonIcon.style.display=currentTheme==='dark'?'block':'none'}
-function renderLineButtons(){lineButtonsContainer.innerHTML='';for(const id in lines){const button=document.createElement('button');button.className='btn-station';button.id=id;button.textContent=lines[id];button.setAttribute('role','button');button.setAttribute('aria-pressed',id===currentLineID?'true':'false');button.setAttribute('tabindex','0');button.addEventListener('click',()=>handleLineClick(id));button.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleLineClick(id)}});lineButtonsContainer.appendChild(button)}adjustMainPadding()}
-function renderStationButtons(){const stationData=stations[currentLineID];if(!stationData)return;stationButtonsContainer.innerHTML='';const stationGroup=document.createElement('div');stationGroup.id=`${currentLineID}-line-buttons`;stationGroup.style.display='flex';stationGroup.className='button-group';stationData.stations.forEach(station=>{const button=document.createElement('button');button.className='btn-station';button.id=`${currentLineID}-${station.id}`;button.dataset.stationId=station.id;button.dataset.upCaption=station.up||'';button.dataset.downCaption=station.down||'';button.textContent=station.name;button.setAttribute('role','button');button.setAttribute('aria-pressed',station.id===currentStationID?'true':'false');button.setAttribute('tabindex','0');button.addEventListener('click',()=>handleStationClick(station.id,station.up,station.down));button.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleStationClick(station.id,station.up,station.down)}});stationGroup.appendChild(button)});stationButtonsContainer.appendChild(stationGroup);adjustMainPadding()}
-function handleLineClick(lineId){document.querySelectorAll('#line-buttons .btn-station').forEach(btn=>{btn.setAttribute('aria-pressed','false');btn.classList.remove('active')});const activeLineBtn=document.getElementById(lineId);if(activeLineBtn){activeLineBtn.classList.add('active');activeLineBtn.setAttribute('aria-pressed','true')}if(lineId!==currentLineID){currentLineID=lineId;currentStationID=null;scheduleDisplaySection.style.display='none';localStorage.setItem("currentLineID",currentLineID);renderStationButtons();stationSelectionSection.style.display='block'}}
-function handleStationClick(stationId,upCaptionText,downCaptionText){if(stationId===currentStationID)return;document.querySelectorAll(`#${currentLineID}-line-buttons .btn-station`).forEach(btn=>{btn.setAttribute('aria-pressed','false');btn.classList.remove('active')});const activeStationBtn=document.getElementById(`${currentLineID}-${stationId}`);if(activeStationBtn){activeStationBtn.classList.add('active');activeStationBtn.setAttribute('aria-pressed','true')}currentStationID=stationId;localStorage.setItem("currentStationID",currentStationID);if(upCaptionText){upCaption.textContent=upCaptionText;upTimeTable.style.display='table'}else{upTimeTable.style.display='none'}if(downCaptionText){downCaption.textContent=downCaptionText;downTimeTable.style.display='table'}else{downTimeTable.style.display='none'}scheduleDisplaySection.style.display='block';updateTimeTable()}
-async function updateTimeTable(){if(!currentLineID||!currentStationID)return;const cacheKey=`${currentLineID}-${currentStationID}`,now=Date.now();if(scheduleCache.has(cacheKey)){const{data,timestamp}=scheduleCache.get(cacheKey);if(now-timestamp<15000){renderTimeTable(data);return}}showLoadingState();try{const response=await fetch(`https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${currentLineID}&sta=${currentStationID}`);if(!response.ok)throw new Error('Network response was not ok.');const data=await response.json();if(data.status===1){scheduleCache.set(cacheKey,{data,timestamp:now});renderTimeTable(data)}else{throw new Error(data.message||'API returned an error.')}}catch(error){console.error("Failed to fetch schedule:",error);showErrorState()}}
-function renderTimeTable(apiResponse){const dataKey=`${currentLineID}-${currentStationID}`,stationSchedule=apiResponse.data[dataKey];if(!stationSchedule){upTimeTableBody.innerHTML=`<tr><td colspan="3" class="error-message">找不到此車站的時間表。</td></tr>`;downTimeTableBody.innerHTML=`<tr><td colspan="3" class="error-message">找不到此車站的時間表。</td></tr>`;return}const currentTime=new Date(apiResponse.curr_time);const upTrains=(stationSchedule.UP||[]).slice(0,3),downTrains=(stationSchedule.DOWN||[]).slice(0,3);upTimeTableBody.innerHTML='';downTimeTableBody.innerHTML='';upTrains.forEach(train=>upTimeTableBody.appendChild(createTrainRow(train,currentTime)));downTrains.forEach(train=>downTimeTableBody.appendChild(createTrainRow(train,currentTime)))}
-function createTrainRow(train,currentTime){const row=document.createElement('tr'),departureTime=new Date(train.time),timeString=departureTime.toTimeString().slice(0,5),minutesLeft=Math.round((departureTime-currentTime)/60000),destination=stationNames[train.dest]||train.dest;const timeCell=document.createElement('td');timeCell.textContent=`${timeString} (還有 ${minutesLeft} 分鐘)`;row.appendChild(timeCell);const destCell=document.createElement('td');destCell.textContent=destination;row.appendChild(destCell);const platCell=document.createElement('td');platCell.textContent=train.plat||'-';row.appendChild(platCell);return row}
-function showLoadingState(){const loadingHTML='<tr><td colspan="3" class="loading-indicator">載入中...</td></tr>';upTimeTableBody.innerHTML=loadingHTML;downTimeTableBody.innerHTML=loadingHTML}
-function showErrorState(){const errorHTML='<tr><td colspan="3" class="error-message">加載失敗，請檢查網絡連接。</td></tr>';upTimeTableBody.innerHTML=errorHTML;downTimeTableBody.innerHTML=errorHTML}
-function updateOnlineStatus(){isOnline=navigator.onLine;if(isOnline){offlineIndicator.classList.remove('show');if(currentLineID&&currentStationID){updateTimeTable()}}else{offlineIndicator.classList.add('show')}}
-function initApp(){initTheme();themeToggle.addEventListener('click',toggleTheme);renderLineButtons();window.addEventListener('online',updateOnlineStatus);window.addEventListener('offline',updateOnlineStatus);updateOnlineStatus();window.addEventListener('resize',adjustMainPadding);adjustMainPadding();const savedLineID=localStorage.getItem("currentLineID"),savedStationID=localStorage.getItem("currentStationID");if(savedLineID&&lines[savedLineID]){handleLineClick(savedLineID);if(savedStationID){setTimeout(()=>{const stationButton=document.querySelector(`[data-station-id="${savedStationID}"]`);if(stationButton){const upCaptionText=stationButton.dataset.upCaption,downCaptionText=stationButton.dataset.downCaption;handleStationClick(savedStationID,upCaptionText,downCaptionText)}else{const firstStationButton=document.querySelector(`#${savedLineID}-line-buttons .btn-station`);if(firstStationButton)firstStationButton.click()}},0)}else{const defaultLineID='TKL';handleLineClick(defaultLineID);setTimeout(()=>{const firstStationButton=document.querySelector(`#${defaultLineID}-line-buttons .btn-station`);if(firstStationButton)firstStationButton.click()},0)}}refreshInterval=setInterval(()=>{if(isOnline){updateTimeTable()}},15000)}
+
+// 初始化主題
+function initTheme(){
+  const savedTheme=localStorage.getItem('theme');
+  document.documentElement.setAttribute('data-theme',savedTheme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+  updateThemeIcon()
+}
+
+// 切換主題
+function toggleTheme(){
+  const currentTheme=document.documentElement.getAttribute('data-theme');
+  const newTheme=currentTheme==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',newTheme);
+  localStorage.setItem('theme',newTheme);
+  updateThemeIcon()
+}
+
+// 更新主題圖標
+function updateThemeIcon(){
+  const currentTheme=document.documentElement.getAttribute('data-theme');
+  if(sunIcon)sunIcon.style.display=currentTheme==='dark'?'none':'block';
+  if(moonIcon)moonIcon.style.display=currentTheme==='dark'?'block':'none'
+}
+
+// 渲染線路按鈕
+function renderLineButtons(){
+  lineButtonsContainer.innerHTML='';
+  for(const id in lines){
+    const button=document.createElement('button');
+    button.className='btn-station';
+    button.id=id;
+    button.textContent=lines[id];
+    button.setAttribute('role','button');
+    button.setAttribute('aria-pressed',id===currentLineID?'true':'false');
+    button.setAttribute('tabindex','0');
+    
+    // 添加線路顏色標識
+    if (lineColors[id]) {
+      button.style.borderLeft = `4px solid ${lineColors[id]}`;
+    }
+    
+    button.addEventListener('click',()=>handleLineClick(id));
+    button.addEventListener('keydown',(e)=>{
+      if(e.key==='Enter'||e.key===' '){
+        e.preventDefault();
+        handleLineClick(id)
+      }
+    });
+    lineButtonsContainer.appendChild(button)
+  }
+  adjustMainPadding()
+}
+
+// 渲染車站按鈕
+function renderStationButtons(){
+  const stationData=stations[currentLineID];
+  if(!stationData)return;
+  
+  stationButtonsContainer.innerHTML='';
+  const stationGroup=document.createElement('div');
+  stationGroup.id=`${currentLineID}-line-buttons`;
+  stationGroup.style.display='flex';
+  stationGroup.className='button-group';
+  
+  stationData.stations.forEach(station=>{
+    const button=document.createElement('button');
+    button.className='btn-station';
+    button.id=`${currentLineID}-${station.id}`;
+    button.dataset.stationId=station.id;
+    button.dataset.upCaption=station.up||'';
+    button.dataset.downCaption=station.down||'';
+    button.textContent=station.name;
+    button.setAttribute('role','button');
+    button.setAttribute('aria-pressed',station.id===currentStationID?'true':'false');
+    button.setAttribute('tabindex','0');
+    
+    button.addEventListener('click',()=>{
+      handleStationClick(station.id,station.up,station.down);
+    });
+    
+    button.addEventListener('keydown',(e)=>{
+      if(e.key==='Enter'||e.key===' '){
+        e.preventDefault();
+        handleStationClick(station.id,station.up,station.down)
+      }
+    });
+    
+    stationGroup.appendChild(button)
+  });
+  stationButtonsContainer.appendChild(stationGroup);
+  adjustMainPadding()
+}
+
+// 處理線路點擊
+function handleLineClick(lineId){
+  document.querySelectorAll('#line-buttons .btn-station').forEach(btn=>{
+    btn.setAttribute('aria-pressed','false');
+    btn.classList.remove('active')
+  });
+  const activeLineBtn=document.getElementById(lineId);
+  if(activeLineBtn){
+    activeLineBtn.classList.add('active');
+    activeLineBtn.setAttribute('aria-pressed','true')
+  }
+  if(lineId!==currentLineID){
+    currentLineID=lineId;
+    currentStationID=null;
+    scheduleDisplaySection.style.display='none';
+    localStorage.setItem("currentLineID",currentLineID);
+    renderStationButtons();
+    stationSelectionSection.style.display='block'
+  }
+}
+
+// 處理車站點擊
+function handleStationClick(stationId,upCaptionText,downCaptionText){
+  if(stationId===currentStationID)return;
+  document.querySelectorAll(`#${currentLineID}-line-buttons .btn-station`).forEach(btn=>{
+    btn.setAttribute('aria-pressed','false');
+    btn.classList.remove('active')
+  });
+  const activeStationBtn=document.getElementById(`${currentLineID}-${stationId}`);
+  if(activeStationBtn){
+    activeStationBtn.classList.add('active');
+    activeStationBtn.setAttribute('aria-pressed','true')
+  }
+  currentStationID=stationId;
+  localStorage.setItem("currentStationID",currentStationID);
+  if(upCaptionText){
+    upCaption.textContent=upCaptionText;
+    upTimeTable.style.display='table'
+  }else{
+    upTimeTable.style.display='none'
+  }
+  if(downCaptionText){
+    downCaption.textContent=downCaptionText;
+    downTimeTable.style.display='table'
+  }else{
+    downTimeTable.style.display='none'
+  }
+  scheduleDisplaySection.style.display='block';
+  updateTimeTable()
+}
+
+// 更新時間表
+async function updateTimeTable(){
+  if(!currentLineID||!currentStationID)return;
+  
+  // 節流：限制更新頻率
+  const now = Date.now();
+  if (now - lastUpdateTime < 5000) {
+    return;
+  }
+  lastUpdateTime = now;
+  
+  const cacheKey=`${currentLineID}-${currentStationID}`;
+  if(scheduleCache.has(cacheKey)){
+    const{data,timestamp}=scheduleCache.get(cacheKey);
+    if(now-timestamp<15000){
+      renderTimeTable(data);
+      return
+    }
+  }
+  showLoadingState();
+  try{
+    const response=await fetch(`https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${currentLineID}&sta=${currentStationID}`, {
+      cache: 'no-cache'
+    });
+    if(!response.ok)throw new Error('Network response was not ok.');
+    const data=await response.json();
+    if(data.status===1){
+      scheduleCache.set(cacheKey,{data,timestamp:now});
+      renderTimeTable(data)
+    }else{
+      throw new Error(data.message||'API returned an error.')
+    }
+  }catch(error){
+    console.error("Failed to fetch schedule:",error);
+    showErrorState()
+  }
+}
+
+// 渲染時間表
+function renderTimeTable(apiResponse){
+  const dataKey=`${currentLineID}-${currentStationID}`,stationSchedule=apiResponse.data[dataKey];
+  if(!stationSchedule){
+    upTimeTableBody.innerHTML=`<tr><td colspan="3" class="error-message">找不到此車站的時間表。</td></tr>`;
+    downTimeTableBody.innerHTML=`<tr><td colspan="3" class="error-message">找不到此車站的時間表。</td></tr>`;
+    return
+  }
+  const currentTime=new Date(apiResponse.curr_time);
+  const upTrains=(stationSchedule.UP||[]).slice(0,3),downTrains=(stationSchedule.DOWN||[]).slice(0,3);
+  upTimeTableBody.innerHTML='';
+  downTimeTableBody.innerHTML='';
+  upTrains.forEach(train=>upTimeTableBody.appendChild(createTrainRow(train,currentTime)));
+  downTrains.forEach(train=>downTimeTableBody.appendChild(createTrainRow(train,currentTime)))
+}
+
+// 創建列車行
+function createTrainRow(train,currentTime){
+  const row=document.createElement('tr'),departureTime=new Date(train.time),timeString=departureTime.toTimeString().slice(0,5),minutesLeft=Math.round((departureTime-currentTime)/60000),destination=stationNames[train.dest]||train.dest;
+  const timeCell=document.createElement('td');
+  timeCell.textContent=`${timeString} (還有 ${minutesLeft} 分鐘)`;
+  row.appendChild(timeCell);
+  const destCell=document.createElement('td');
+  destCell.textContent=destination;
+  row.appendChild(destCell);
+  const platCell=document.createElement('td');
+  platCell.textContent=train.plat||'-';
+  row.appendChild(platCell);
+  return row
+}
+
+// 顯示加載狀態
+function showLoadingState(){
+  const loadingHTML='<tr><td colspan="3" class="loading-indicator">載入中...</td></tr>';
+  upTimeTableBody.innerHTML=loadingHTML;
+  downTimeTableBody.innerHTML=loadingHTML
+}
+
+// 顯示錯誤狀態
+function showErrorState(){
+  const errorHTML='<tr><td colspan="3" class="error-message">加載失敗，請檢查網絡連接。</td></tr>';
+  upTimeTableBody.innerHTML=errorHTML;
+  downTimeTableBody.innerHTML=errorHTML
+}
+
+// 更新在線狀態
+function updateOnlineStatus(){
+  isOnline=navigator.onLine;
+  if(isOnline){
+    offlineIndicator.classList.remove('show');
+    if(currentLineID&&currentStationID){
+      updateTimeTable()
+    }
+  }else{
+    offlineIndicator.classList.add('show')
+  }
+}
+
+// 初始化應用
+function initApp(){
+  initTheme();
+  initSearch();
+  
+  themeToggle.addEventListener('click',toggleTheme);
+  
+  renderLineButtons();
+  window.addEventListener('online',updateOnlineStatus);
+  window.addEventListener('offline',updateOnlineStatus);
+  updateOnlineStatus();
+  window.addEventListener('resize',adjustMainPadding);
+  adjustMainPadding();
+  
+  const savedLineID=localStorage.getItem("currentLineID"),savedStationID=localStorage.getItem("currentStationID");
+  if(savedLineID&&lines[savedLineID]){
+    handleLineClick(savedLineID);
+    if(savedStationID){
+      setTimeout(()=>{
+        const stationButton=document.querySelector(`[data-station-id="${savedStationID}"]`);
+        if(stationButton){
+          const upCaptionText=stationButton.dataset.upCaption,downCaptionText=stationButton.dataset.downCaption;
+          handleStationClick(savedStationID,upCaptionText,downCaptionText)
+        }else{
+          const firstStationButton=document.querySelector(`#${savedLineID}-line-buttons .btn-station`);
+          if(firstStationButton)firstStationButton.click()
+        }
+      },0)
+    }else{
+      const defaultLineID='TKL';
+      handleLineClick(defaultLineID);
+      setTimeout(()=>{
+        const firstStationButton=document.querySelector(`#${defaultLineID}-line-buttons .btn-station`);
+        if(firstStationButton)firstStationButton.click()
+      },0)
+    }
+  }
+  refreshInterval=setInterval(()=>{
+    if(isOnline){
+      updateTimeTable()
+    }
+  },15000)
+}
+
 document.addEventListener('DOMContentLoaded',initApp);
 </script>
 </body>
